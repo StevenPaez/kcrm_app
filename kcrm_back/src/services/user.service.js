@@ -21,6 +21,7 @@ class UserService {
     }
 
     async updateUser(id, user) {
+        if(user.password) user.password = await bcrypt.hash(user.password, SALT);
         return await this.userModel.update(user, {
             where: {
                 id: id

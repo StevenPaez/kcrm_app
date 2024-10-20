@@ -14,9 +14,9 @@ class AuthService {
 
     async validateLogin(user) {
         const { email, password } = user;
-        this.emailValidate(email);
-        this.passwordValidate(password);
-        this.generateToken();
+        await this.emailValidate(email);
+        await this.passwordValidate(password);
+        await this.generateToken();
         return {
             userLogin: this.userLogin,
             token: this.token
@@ -29,7 +29,6 @@ class AuthService {
                 email: email
             }
         });
-        console.log(userLogin);
 
         if (!userLogin) {
             throw new Error('User not exist');

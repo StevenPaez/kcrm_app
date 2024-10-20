@@ -1,4 +1,6 @@
 import User from "../models/user.model.js";
+import bcrypt from 'bcrypt';
+import { SALT } from "../../config.js";
 
 class UserService {
     constructor() {
@@ -14,6 +16,7 @@ class UserService {
     }
 
     async createUser(user) {
+        user.password = await bcrypt.hash(user.password, SALT);
         return await this.userModel.create(user);
     }
 

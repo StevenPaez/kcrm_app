@@ -6,4 +6,4 @@ saleRouter.get('/', (req, res) => {
     res.send('Sales');
 });
 
-export default saleRouter
+export default saleRouter;

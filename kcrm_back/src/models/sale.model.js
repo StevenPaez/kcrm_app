@@ -31,6 +31,11 @@ const Sale = sequelize.define('Sale', {
             key: 'id',
         }
     },
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
     updated_by: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -38,6 +43,12 @@ const Sale = sequelize.define('Sale', {
             model: 'users',
             key: 'id',
         }
+    },
+    updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+        onUpdate: DataTypes.NOW
     }
 }, {
     tableName: 'sales',

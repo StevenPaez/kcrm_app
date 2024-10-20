@@ -1,5 +1,5 @@
-import {DataTypes} from "sequelize";
-import {sequelize} from "../../database.js";
+import { DataTypes } from "sequelize";
+import sequelize  from "../../database.js";
 
 const User = sequelize.define('User', {
     id: {
@@ -30,10 +30,21 @@ const User = sequelize.define('User', {
             Model: 'roles',
             key: 'id'
         }
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+        onUpdate: DataTypes.NOW
     }
 }, {
     tableName: 'users',
-    timestamps: true
+    timestamps: false
 });
 
-module.exports = User;
+export default User;

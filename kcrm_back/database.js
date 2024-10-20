@@ -9,4 +9,4 @@ const sequelize = new Sequelize({
     database: 'kcrm_db'
 })
 
-export default sequelize
+export default sequelize;

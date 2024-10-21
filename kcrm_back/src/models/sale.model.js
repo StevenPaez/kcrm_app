@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../../database";
+import sequelize from "../../database.js";
+import User from "./user.model.js";
 
 const Sale = sequelize.define('Sale', {
     id: {
@@ -27,7 +28,7 @@ const Sale = sequelize.define('Sale', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'users',
+            model: User,
             key: 'id',
         }
     },
@@ -40,7 +41,7 @@ const Sale = sequelize.define('Sale', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'users',
+            model: User,
             key: 'id',
         }
     },
@@ -52,7 +53,10 @@ const Sale = sequelize.define('Sale', {
     }
 }, {
     tableName: 'sales',
-    timestamps: true
+    timestamps: false
 });
 
-module.exports = Sale;
+Sale.belongsTo(User, { foreignKey: 'created_by', as: 'created_user' });
+Sale.belongsTo(User, { foreignKey: 'updated_by', as: 'updated_user' });
+
+export default Sale;

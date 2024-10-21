@@ -142,7 +142,6 @@ const UsersTable = () => {
         <DialogTitle>{selectedUser ? "Editar Usuario" : "Agregar Usuario"}</DialogTitle>
         <DialogContent>
           <TextField
-            autoFocus
             margin="dense"
             label="Nombre"
             type="text"

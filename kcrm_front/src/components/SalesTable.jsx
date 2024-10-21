@@ -14,7 +14,23 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
+
+const Products = [
+  { key: "CC", value: "Credito de consumo" },
+  { key: "LLI", value: "Libranza Libre Inversión" },
+  { key: "TC", value: "Tarjeta de credito" }
+]
+
+const ProductsEnum = {
+  CC: "Credito de consumo",
+  LLI: "Libranza Libre Inversión",
+  TC: "Tarjeta de credito"
+}
 
 const SalesTable = () => {
   const [sales, setSales] = useState([]);
@@ -22,6 +38,8 @@ const SalesTable = () => {
   const [selectedSale, setSelectedSale] = useState(null);
   const [product, setProduct] = useState("");
   const [amount, setAmount] = useState("");
+  const [franchise, setFranchise] = useState("");
+  const [tasa, setTasa] = useState("");
 
   useEffect(() => {
     fetchSales();
@@ -38,6 +56,8 @@ const SalesTable = () => {
     setSelectedSale(sale);
     setProduct(sale ? sale.product : "");
     setAmount(sale ? sale.amount : "");
+    setFranchise(sale ? sale.franchise : "");
+    setTasa(sale ? sale.tasa : "");
     setOpen(true);
   };
 
@@ -80,7 +100,11 @@ const SalesTable = () => {
 
   return (
     <Box sx={{ width: '100%', p: 4, position: 'relative' }}>
-      <Button variant="contained" onClick={() => handleClickOpen()}>
+      <Button
+        variant="contained"
+        onClick={() => handleClickOpen()}
+        sx={{ mb: 2}}
+      >
         Agregar Venta
       </Button>
       <TableContainer component={Paper}>
@@ -89,7 +113,13 @@ const SalesTable = () => {
             <TableRow>
               <TableCell>ID</TableCell>
               <TableCell>Producto</TableCell>
-              <TableCell>Cantidad</TableCell>
+              <TableCell>Cupo Solicitado</TableCell>
+              <TableCell>Franquicia</TableCell>
+              <TableCell>Tasa</TableCell>
+              <TableCell>Fecha creación</TableCell>
+              <TableCell>Usuario creación</TableCell>
+              <TableCell>Fecha actualización</TableCell>
+              <TableCell>Usuario actualización</TableCell>
               <TableCell>Acciones</TableCell>
             </TableRow>
           </TableHead>
@@ -98,9 +128,15 @@ const SalesTable = () => {
               <TableRow key={sale.id}>
                 <TableCell>{sale.id}</TableCell>
                 <TableCell>{sale.product}</TableCell>
-                <TableCell>{sale.amount}</TableCell>
+                <TableCell>{sale.requested_amount.toLocaleString()}</TableCell>
+                <TableCell>{sale.franchise}</TableCell>
+                <TableCell>{sale.rate}</TableCell>
+                <TableCell>{sale.created_at}</TableCell>
+                <TableCell>{sale.created_user.name}</TableCell>
+                <TableCell>{sale.updated_at}</TableCell>
+                <TableCell>{sale.updated_user.name}</TableCell>
                 <TableCell>
-                  <Button variant="outlined" sx={{ mr: 2 }} onClick={() => handleClickOpen(sale)}>Editar</Button>
+                  <Button variant="outlined" sx={{ mr: 2, mb: 2 }} onClick={() => handleClickOpen(sale)}>Editar</Button>
                   <Button variant="outlined" color="error" onClick={() => handleDelete(sale.id)}>Eliminar</Button>
                 </TableCell>
               </TableRow>
@@ -112,25 +148,52 @@ const SalesTable = () => {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{selectedSale ? "Editar Venta" : "Agregar Venta"}</DialogTitle>
         <DialogContent>
+          <FormControl fullWidth margin="dense">
+            <InputLabel>Producto</InputLabel>
+            <Select
+              value={product}
+              onChange={(e) => setProduct(e.target.value)}
+            >
+              {Products.map((key) => (
+                <MenuItem key={key.key} value={key.value}>{key.value}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
-            autoFocus
             margin="dense"
-            label="Producto"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={product}
-            onChange={(e) => setProduct(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="Cantidad"
+            label="Cupo Solicitado"
             type="number"
             fullWidth
             variant="outlined"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
+          {
+            product === ProductsEnum.TC &&
+            <FormControl fullWidth margin="dense">
+              <InputLabel>Franquicia</InputLabel>
+              <Select
+                value={franchise}
+                onChange={(e) => setFranchise(e.target.value)}
+              >
+                <MenuItem value={'AMEX'}>AMEX</MenuItem>
+                <MenuItem value={'VISA'}>VISA</MenuItem>
+                <MenuItem value={'MASTERCARD'}>MASTERCARD</MenuItem>
+              </Select>
+            </FormControl>
+          }
+          {
+            product !== ProductsEnum.TC && 
+            <TextField
+              margin="dense"
+              label="Tasa"
+              type="decimal"
+              fullWidth
+              variant="outlined"
+              value={tasa}
+              onChange={(e) => setTasa(e.target.value)}
+            />
+          }
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancelar</Button>

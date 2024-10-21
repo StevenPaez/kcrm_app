@@ -1,18 +1,33 @@
 import { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import Cookies from 'js-cookie';
+import PropTypes from "prop-types";
+import axios from 'axios'; // Importa Axios
 
-export default function LoginPage({ onLogin }) {
+export default function LoginPage({ onLogin, userNameLoginHandler }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    // TODO: Validación de credenciales
-    if (email === "admin" && password === "1234") {
+    try {
+      const response = await axios.post("http://localhost:4000/api/auth", {
+        email,
+        password,
+      });
+
+      Cookies.set("token", response.data.token, { expires: 7, secure: true, sameSite: "Strict" });
       onLogin();
-    } else {
-      alert("Credenciales incorrectas");
+      userNameLoginHandler(response.data.userLogin);
+
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Credenciales incorrectas";
+      alert(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,10 +60,21 @@ export default function LoginPage({ onLogin }) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button type="submit" variant="contained" color="primary" fullWidth>
-          Iniciar Sesión
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          disabled={loading}
+        >
+          {loading ? "Cargando..." : "Iniciar Sesión"}
         </Button>
       </form>
     </Box>
   );
 }
+
+LoginPage.propTypes = {
+  onLogin: PropTypes.func.isRequired,
+  userNameLoginHandler: PropTypes.func.isRequired
+};

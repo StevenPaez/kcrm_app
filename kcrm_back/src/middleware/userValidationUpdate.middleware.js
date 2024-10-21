@@ -1,9 +1,8 @@
 import { check, validationResult } from 'express-validator';
 
-const userValidation = [
+const userValidationUpdate = [
     check('name').not().isEmpty().withMessage('Name is required'),
     check('email').not().isEmpty().withMessage('Email is required').isEmail().withMessage('Email is not valid'),
-    check('password').not().isEmpty().withMessage('Password is required'),
     check('role_id').not().isEmpty().withMessage('Rol is required')
 , (req, res, next) => {
         const errors = validationResult(req);
@@ -12,4 +11,4 @@ const userValidation = [
     }
 ];
 
-export default userValidation;
+export default userValidationUpdate;

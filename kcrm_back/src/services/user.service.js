@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from 'bcrypt';
 import { SALT } from "../../config.js";
+import Role from "../models/role.model.js";
 
 class UserService {
     constructor() {
@@ -8,7 +9,13 @@ class UserService {
     }
 
     async getUsers() {
-        return await this.userModel.findAll();
+        return await this.userModel.findAll({
+            attributes: ['id', 'name', 'email'],
+            include: [{
+                model: Role,
+                as: 'role'
+            }]
+        });
     }
 
     async getUser(id){
@@ -21,7 +28,13 @@ class UserService {
     }
 
     async updateUser(id, user) {
-        if(user.password) user.password = await bcrypt.hash(user.password, SALT);
+        if(user.password)
+        {
+            user.password = await bcrypt.hash(user.password, SALT);
+        } else {
+            delete user.password;
+        }
+
         return await this.userModel.update(user, {
             where: {
                 id: id
@@ -30,11 +43,13 @@ class UserService {
     }
 
     async deleteUser(id) {
-        return await this.userModel.destroy({
-            where: {
-                id: id
-            }
-        });
+        const user = await this.userModel.findByPk(id);
+
+        if(!user) {
+            throw new Error('User not found');
+        }
+
+        await user.destroy();
     }
 }
 

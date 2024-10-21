@@ -4,9 +4,14 @@ import indexRoutes from './src/routes/index.routes.js';
 import userRoutes from './src/routes/user.routes.js';
 import saleRoutes from './src/routes/sale.routes.js';
 import authRoutes from './src/routes/auth.routes.js';
-import jwt from 'jsonwebtoken';
+import cors from 'cors';
 
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+}));
 
 app.use(express.json());
 

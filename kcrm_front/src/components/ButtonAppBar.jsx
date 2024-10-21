@@ -3,9 +3,17 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { Link } from "react-router-dom";  // Importa Link de react-router-dom
+import { Link } from "react-router-dom";
+import Cookies from 'js-cookie';
+import PropTypes from "prop-types";
 
-export default function ButtonAppBar() {
+
+export default function ButtonAppBar({ userNameLogin }) {
+  const onLogout = () => {
+    Cookies.remove("token");
+    window.location.reload();
+  };
+
   return (
     <>
       <AppBar position="fixed">
@@ -26,9 +34,20 @@ export default function ButtonAppBar() {
             </Button>
           </Box>
 
-          <Button color="inherit">Login</Button>
+          <Typography variant="p" component="div" sx={{ flexGrow: 1 }}>
+            USUARIO: {userNameLogin}
+          </Typography>
+          <Button
+            onClick={() => onLogout()}
+            color="inherit">
+              Salir
+          </Button>
         </Toolbar>
       </AppBar>
     </>
   );
+}
+
+ButtonAppBar.propTypes = {
+  userNameLogin: PropTypes.string
 }

@@ -18,7 +18,7 @@ class AuthService {
         await this.passwordValidate(password);
         await this.generateToken();
         return {
-            userLogin: this.userLogin,
+            userLogin: this.userLogin.name,
             token: this.token
         };
     }

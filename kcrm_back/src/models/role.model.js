@@ -1,13 +1,13 @@
-import sequelize from "../../database";
+import sequelize from "../../database.js";
 import { DataTypes } from "sequelize";
 
-const Role = Sequelize.define('Role', {
+const Role = sequelize.define('Role', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
-    rone_name: {
+    role_name: {
         type: DataTypes.ENUM('Administrator', 'Advisor'),
         allowNull: false
     }
@@ -16,4 +16,4 @@ const Role = Sequelize.define('Role', {
     timestamps: false
 });
 
-module.exports = Role;
+export default Role;

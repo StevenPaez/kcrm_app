@@ -1,0 +1,41 @@
+version: "3"
+services:
+  backend:
+    build:
+      context: ./kcrm_back
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./kcrm_back:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=kcrm_db
+    depends_on:
+      - mysql
+
+  frontend:
+    build:
+      context: ./kcrm_front
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./kcrm_front:/app
+    environment:
+      - NODE_ENV=development
+
+  mysql:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: kcrm_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
